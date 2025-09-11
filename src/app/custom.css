@@ -1,0 +1,285 @@
+body {
+    overflow-x: hidden !important;
+}
+.chakra-ui-dark .ql-toolbar.ql-snow span, 
+.chakra-ui-dark .ql-toolbar.ql-snow button {
+    color: #64748b;
+}
+.chakra-ui-dark .ql-snow .ql-stroke {
+    stroke: #64748b !important;
+}
+
+body.chakra-ui-light .ql-editor {
+    color: #4a505b;
+}
+body.chakra-ui-dark .ql-editor {
+    color: #ffffff;
+}
+body.chakra-ui-light .godmod-progress {
+    background: #fff;
+}
+body.chakra-ui-dark .godmod-progress {
+    background: #1a202c;
+}
+.ql-container.ql-snow {
+    height: calc(100vh - 152px);
+}
+.chakra-input, .chakra-textarea {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1rem;
+}
+body.chakra-ui-light .chakra-input, 
+body.chakra-ui-light .chakra-textarea {
+    border: 1px solid #e2e8f0;
+}
+.godmode-notification {
+    border: 1px dashed rgba(255, 255, 255, 0.1)
+}
+body.chakra-ui-light .godmode-notification {
+    border: 1px dashed #c6c6c6;
+}
+.custom-btn-1 {
+    background-color: transparent;
+    color: #E2E8F0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    line-height: 17px;
+    height: unset;
+}
+.custom-btn-1:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+body.chakra-ui-light .custom-btn-1 {
+    color: #ffffff;
+    border: 1px solid #2196F3;
+    background: #2196F3;
+}
+body.chakra-ui-light .custom-btn-1:hover {
+    background-color: #158ae7;
+}
+
+.editor-right-col {
+    height: calc(100vh - 152px);
+    padding: 0;
+    border-radius: 2px
+}
+.ql-container.ql-snow {
+    border: none !important;
+    border-radius: 5px
+}
+.ql-toolbar.ql-snow {
+    border: none !important;
+    margin-bottom: 10px;
+}
+.ql-editor p {
+    margin-bottom: 10px !important;
+    font-size: 15px;
+    line-height: 24px;
+}
+.ql-editor ol > li, .ql-editor ul > li {
+    list-style-type: none;
+    font-size: 15px;
+    line-height: 24px;
+    margin-bottom: 10px;
+}
+.ql-editor h1,
+.ql-editor h2, 
+.ql-editor h3, 
+.ql-editor h4,
+.ql-editor h5 {
+    margin-bottom: 13px !important;
+    font-weight: 700;
+}
+/* Scrollbar Styling for Webkit Browsers */
+.ql-editor::-webkit-scrollbar {
+    width: 10px;
+}
+
+body.chakra-ui-light .godmod-progress {
+    background: #fff;
+}
+body.chakra-ui-dark .godmod-progress {
+    background: #1a202c;
+}
+
+div#blocknote-container {
+    height: calc(100vh - 150px);
+}
+@media (max-width: 768px) {
+    div#blocknote-container {
+        height: calc(100vh - 250px);
+    }
+}
+div#blocknote-container a {
+    color: #2196F3;
+    cursor: pointer;
+}
+.bn-container {
+    overflow-y: auto;
+    height: 100%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.bn-container::-webkit-scrollbar {
+    display: none;
+  }
+.ProseMirror {
+    padding-right: 20px !important;
+    background-color: transparent !important;
+}
+body.chakra-ui-dark .bn-editor {
+    color: #ffffff !important;
+}
+body.chakra-ui-light .bn-editor {
+    color: #000000 !important;
+}
+.bn-side-menu .mantine-UnstyledButton-root:hover {
+    background-color: transparent !important;
+}
+body.chakra-ui-dark .meta-title {
+    color: #ffffff !important;
+}
+body.chakra-ui-dark .meta-description {
+    color: #ffffff !important;
+}
+div#blocknote-container p {
+    margin: 0 0 7px 0 !important;
+}
+div#blocknote-container img {
+    margin: 5px 0;
+}
+div#blocknote-container h2 {
+    margin-top: 10px;
+}
+div#blocknote-container h2 {
+    margin-top: 6px;
+}
+
+@media (max-width: 768px) {
+    #blocknote-container h1 {
+        font-size: 25px;
+    }
+    #blocknote-container h2 {
+        font-size: 20px;
+    }
+    #blocknote-container h3 {
+        font-size: 18px;
+    } 
+    #blocknote-container h4 {
+        font-size: 16px;
+    }
+    #blocknote-container h5 {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 500px) {
+    #blocknote-container h1 {
+        font-size: 20px;
+    }
+    #blocknote-container h2 {
+        font-size: 18px;
+    }
+    #blocknote-container h3 {
+        font-size: 16px;
+    } 
+    #blocknote-container h4 {
+        font-size: 14px;
+    }
+    #blocknote-container h5 {
+        font-size: 12px;
+    }
+}
+
+
+/* Typewriter Animation */
+.type {
+    display: inline-block;
+}
+
+.type > span {
+    display: grid;
+    overflow: hidden;
+    height: 1.2em;
+}
+
+
+.type {
+    display:inline-block;
+    vertical-align: bottom;
+  }
+  
+  .type > span {
+    display:grid;
+    overflow: hidden;
+  }
+  
+  .type span span {
+    width:0%;
+    max-width:max-content;
+    overflow: hidden;
+    height:inherit;
+    word-break:break-all;
+    animation:
+      c 0.5s infinite steps(1),  
+      t 3s linear infinite alternate,
+      m 18s steps(3) infinite;
+  }
+  .type span span:before {
+    content:" ";
+    display:inline-block;
+  }
+  
+  @keyframes t{
+    90%,100% {width:100%}
+  }
+  
+  @keyframes c{
+    0%,100%{box-shadow:5px 0 0 #0000}
+    50%    {box-shadow:5px 0 0 #0bc5ea  }
+  }
+  
+  @keyframes m{
+    100% {transform:translateY(-300%)}
+  }
+
+
+  body.chakra-ui-dark select {
+    background: rgb(6 13 54);
+    color: #fff;
+  }
+  body.chakra-ui-light select {
+    background: #fff;
+    color: #000;
+  }
+  body.chakra-ui-dark select option {
+    background: rgb(6 13 54);
+    color: #fff;
+  }
+  body.chakra-ui-light select option {
+    background: #fff;
+    color: #000;
+  }
+
+  button.react-joyride__beacon {
+    opacity: 0;
+}
+
+@media (max-width: 500px) {
+    .mode-div {
+        flex-wrap: wrap;
+    }
+    .balance-div {
+        width: 100%;
+        align-items: flex-start;
+    }
+}

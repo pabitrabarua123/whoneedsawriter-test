@@ -1,0 +1,264 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id              String           @id @default(cuid())
+  name            String?
+  email           String?          @unique
+  emailVerified   DateTime?
+  image           String?
+  age             Int?
+  dailyBalance    Int              @default(30)
+  LiteModeBalance Int              @default(0)
+  monthyBalance   Int              @default(0)
+  monthyPlan      Int              @default(0)
+  lifetimeBalance Int              @default(0)
+  lifetimePlan    Int              @default(0)
+  trialBalance    Int              @default(2)
+  userPlanId      String?
+  role            Int              @default(0)
+  createdAt       DateTime?        @default(now())
+  firstLoginAt    DateTime?
+  lastLoginAt     DateTime?
+  firstLoginPopupShown Boolean       @default(false)
+  accounts        Account[]
+  sessions        Session[]
+  UserPlan        UserPlan?        @relation(fields: [userPlanId], references: [id])
+  UserOnboarding  UserOnboarding[]
+  Workspace       Workspace[]
+  WorkspaceUsers  WorkspaceUsers[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model SubscriptionPlan {
+  id        Int      @id @default(autoincrement())
+  name      String
+  productId String
+  priceId   String
+  price     Int
+  features  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  currency  String?
+}
+
+model LifetimePlan {
+  id        Int      @id @default(autoincrement())
+  name      String
+  productId String
+  priceId   String
+  price     Int
+  features  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  currency  String?
+}
+
+model UserPlan {
+  id                   String    @id @default(cuid())
+  userId               String    @unique
+  planId               Int?
+  lemonOrderId         String?
+  lemonProductId       String?
+  lemonVariantId       String?
+  lemonPlanName        String?
+  lemonPlanPrice       String?
+  lemonSubscriptionId  String?
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  stripePriceId        String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  validUntil           DateTime?
+  cancelUrl            String?
+  updateUrl            String?
+  status               String?
+  cancelled            Int       @default(0)
+  User                 User[]
+}
+
+model UserOnboarding {
+  id                           String   @id @default(cuid())
+  userId                       String
+  isComplete                   Boolean  @default(false)
+  role                         String?
+  source                       String?
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+  dashboardTourComplete        Boolean  @default(false)
+  dashboardTourSkipped         Boolean  @default(false)
+  articleGeneratorTourComplete Boolean  @default(false)
+  articleGeneratorTourSkipped  Boolean  @default(false)
+  user                         User     @relation(fields: [userId], references: [id])
+}
+
+model Workspace {
+  id                         String                       @id @default(cuid())
+  name                       String
+  emailDomain                String?
+  isDeleted                  Boolean                      @default(false)
+  createdBy                  String
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime                     @updatedAt
+  user                       User                         @relation(fields: [createdBy], references: [id])
+  WorkspacePendingInvitation WorkspacePendingInvitation[]
+  WorkspaceUsers             WorkspaceUsers[]
+}
+
+model WorkspaceUsers {
+  id          String        @id @default(cuid())
+  workspaceId String
+  userId      String
+  role        WorkspaceRole
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  user        User          @relation(fields: [userId], references: [id])
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id])
+}
+
+model WorkspacePendingInvitation {
+  id          String        @id @default(cuid())
+  workspaceId String
+  email       String
+  role        WorkspaceRole
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id])
+}
+
+model Todo {
+  id          String   @id @default(cuid())
+  text        String
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model GodmodeArticles {
+  id                      String   @id @default(cuid())
+  userId                  String
+  keyword                 String
+  content                 String?
+  featuredImage           String?
+  svgUrl                  String?
+  metaTitle               String?
+  metaDescription         String?
+  articleType             String
+  aiScore                 Int?
+  status                  Int      @default(0)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  batchId                 String
+  requestProcess          Int      @default(0)
+  additionalImageRequired String?
+  comment                 String?
+  featuredImageRequired   String?
+  wordLimit               Int      @default(0)
+  title                   String?
+}
+
+model PendingGodmodeArticles {
+  id               String   @id @default(cuid())
+  userId           String
+  keywordId        String
+  batchId          String
+  cronRequest      Int      @default(0)
+  cronRequestAt    DateTime @default(now())
+  createdAt        DateTime @default(now())
+  godmodeArticleId String
+}
+
+model batch {
+  id                 String   @id @default(cuid())
+  name               String
+  articles           Int
+  completed_articles Int
+  pending_articles   Int
+  failed_articles    Int
+  status             Int
+  userId             String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  articleType        String
+  startProcess       Int      @default(0)
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  api_key   String
+  status    Int
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  date        String
+  slug        String   @unique
+  content     String
+  ogImageUrl  String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model userWebsite {
+  id         String   @id @default(cuid())
+  name       String
+  siteUrl    String
+  userId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  authors    String?
+  categories String?
+}
+
+enum WorkspaceRole {
+  OWNER
+  ADMIN
+  MEMBER
+  GUEST
+}

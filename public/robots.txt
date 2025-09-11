@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://whoneedsawriter.com
+
+# Sitemaps
+Sitemap: https://whoneedsawriter.com/sitemap.xml
