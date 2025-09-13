@@ -135,7 +135,7 @@ export async function GET() {
             } else {
               await tx.user.update({
                 where: { id: batch.userId },
-                data: { trialBalance: user.trialBalance + failedCount }
+                data: { freeCredits: user.freeCredits + failedCount }
               });
             }
           }
