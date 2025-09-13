@@ -482,14 +482,14 @@ const start25MinLoader = () => {
       }else if(user && user.lifetimeBalance > 0){
         setBalance({...balance, credits: user.lifetimeBalance, balance_type: 'lifetimeBalance', balance_text: 'Lifetime Balance'})
       }else{
-        setBalance({...balance, credits: user?.trialBalance? user.trialBalance : 0, balance_type: 'trialBalance', balance_text: 'Trial Balance'})
+        setBalance({...balance, credits: user?.freeCredits? user.freeCredits : 0, balance_type: 'freeCredits', balance_text: 'Trial Balance'})
       }
     }else{
      // console.log('hit hgere');
-      if(user && user?.LiteModeBalance > 0){
-        setBalance({...balance, credits: user.LiteModeBalance + user.dailyBalance, balance_type: 'LiteModeBalance', balance_text: 'LiteMode Balance'})
+      if(user && user?.freeCredits > 0){
+        setBalance({...balance, credits: user.freeCredits + user.freeCredits, balance_type: 'freeCredits', balance_text: 'LiteMode Balance'})
       }else{
-        setBalance({...balance, credits: user?.dailyBalance? user.dailyBalance : 0, balance_type: 'dailyBalance', balance_text: 'LiteMode Balance'})
+        setBalance({...balance, credits: user?.freeCredits? user.freeCredits : 0, balance_type: 'freeCredits', balance_text: 'LiteMode Balance'})
       }
     }
   }, [isGodMode, user]);
