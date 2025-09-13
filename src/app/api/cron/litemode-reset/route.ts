@@ -10,7 +10,7 @@ export async function GET() {
   
   try {
     await prismaClient.user.updateMany({
-      data: { dailyBalance: 30 } 
+      data: { freeCredits: 30 } 
     });
 
       return NextResponse.json({ 
