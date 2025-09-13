@@ -7,7 +7,6 @@ import { NextRequest, NextResponse } from "next/server";
 export interface UserPlanStatusResponse {
   planName: string;
   godModeCredits: number;
-  liteModeCredits: number;
   validUntil?: string;
 }
 
@@ -37,7 +36,6 @@ export async function GET(req: NextRequest) {
 
     let planName = "Free";
     let godModeCredits = 0;
-    let liteModeCredits = 0;
     let validUntil: string | undefined;
 
     // First check UserPlan table using userId
@@ -58,7 +56,6 @@ export async function GET(req: NextRequest) {
       if (subscriptionPlan) {
         planName = subscriptionPlan.name;
         godModeCredits = user.monthyBalance;
-        liteModeCredits = user.LiteModeBalance;
 
         // Get subscription expiry date
         if (userPlan.validUntil) {
@@ -69,14 +66,12 @@ export async function GET(req: NextRequest) {
     // Free plan (no active subscription or UserPlan)
     else {
       planName = "Free";
-      godModeCredits = user.trialBalance || 0;
-      liteModeCredits = 0; // Free plan doesn't have lite mode credits
+      godModeCredits = user.freeCredits || 0;
     }
 
     const response: UserPlanStatusResponse = {
       planName,
       godModeCredits,
-      liteModeCredits,
       validUntil,
     };
 
