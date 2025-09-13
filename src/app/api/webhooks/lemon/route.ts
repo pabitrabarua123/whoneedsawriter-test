@@ -41,7 +41,6 @@ interface LemonSqueezyWebhookEvent {
 
 // Function to get balance based on variant ID (similar to your Stripe product mapping)
 function getBalanceFromVariantId(variantId: number) {
-  let LiteModeBalance = 0;
   let monthyBalance = 0;
   let monthyPlan = 0;
   let lifetimeBalance = 0;
@@ -52,40 +51,34 @@ function getBalanceFromVariantId(variantId: number) {
   switch (variantId.toString()) { 
     // Basic Monthly Plan
     case '914683':
-      LiteModeBalance = 100;
-      monthyBalance = 10;
-      monthyPlan = 10;
+      monthyBalance = 20;
+      monthyPlan = 20;
       break;
 
     case '914698':
-      LiteModeBalance = 150;
-      monthyBalance = 30;
-      monthyPlan = 30;
+      monthyBalance = 60;
+      monthyPlan = 60;
       break;
 
     case '914704':
-     LiteModeBalance = 300;
-     monthyBalance = 100;
-     monthyPlan = 100;
+     monthyBalance = 200;
+     monthyPlan = 200;
      break;
 
      // Basic Lifetime Plan
     case '914711':
-     LiteModeBalance = 100;
-     lifetimeBalance = 10;
-     lifetimePlan = 10;
-     break;
-
-    case '914712':
-     LiteModeBalance = 150;
      lifetimeBalance = 30;
      lifetimePlan = 30;
      break;
 
+    case '914712':
+     lifetimeBalance = 75;
+     lifetimePlan = 75;
+     break;
+
     case '914714':
-     LiteModeBalance = 300;
-     lifetimeBalance = 100;
-     lifetimePlan = 100;
+    lifetimeBalance = 250;
+     lifetimePlan = 250;
      break;
 
     default:
@@ -93,7 +86,6 @@ function getBalanceFromVariantId(variantId: number) {
   }
 
   return {
-    LiteModeBalance,
     monthyBalance,
     monthyPlan,
     lifetimeBalance,
@@ -210,7 +202,6 @@ export async function POST(req: NextRequest): Promise<Response> {
             id: user.id,
           },
           data: {
-            LiteModeBalance: balances.LiteModeBalance,
             monthyBalance: balances.monthyBalance,
             monthyPlan: balances.monthyPlan,
           },
@@ -313,7 +304,6 @@ export async function POST(req: NextRequest): Promise<Response> {
             id: userPlan.userId,
           },
           data: {
-            LiteModeBalance: balances.LiteModeBalance,
             monthyBalance: balances.monthyBalance,
             monthyPlan: balances.monthyPlan,
           },
@@ -393,7 +383,6 @@ export async function POST(req: NextRequest): Promise<Response> {
             id: user.id,
           },
           data: {
-            LiteModeBalance: balances.LiteModeBalance,
             lifetimeBalance: balances.lifetimeBalance,
             lifetimePlan: balances.lifetimePlan,
           },

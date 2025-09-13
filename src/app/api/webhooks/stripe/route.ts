@@ -86,45 +86,38 @@ export async function POST(req: NextRequest): Promise<Response> {
         );
       }
       
-      var LiteModeBalance:number = 0;
       var monthyBalance:number = 0;
       var monthyPlan:number = 0;
 
 switch (stripeProductId) {
   case 'prod_SNpzHYxK73pcMz':
-    LiteModeBalance = 100;
-    monthyBalance = 10;
-    monthyPlan = 10;
+    monthyBalance = 20;
+    monthyPlan = 20;
     break;
 
   case 'prod_SNpyVYxA6fTEE7':
-    LiteModeBalance = 150;
-    monthyBalance = 30;
-    monthyPlan = 30;
+    monthyBalance = 60;
+    monthyPlan = 60;
     break;
 
   case 'prod_SNpyaI8RYkPnd9':
-    LiteModeBalance = 300;
-    monthyBalance = 100;
-    monthyPlan = 100;
+    monthyBalance = 200;
+    monthyPlan = 200;
     break;
 
   case 'prod_SZigsQFIGhkCr0':
-    LiteModeBalance = 100;
-    monthyBalance = 10;
-    monthyPlan = 10;
+    monthyBalance = 20;
+    monthyPlan = 20;
     break;
 
   case 'prod_SZihMgQLGeNXb4':
-    LiteModeBalance = 150;
-    monthyBalance = 30;
-    monthyPlan = 30;
+    monthyBalance = 60;
+    monthyPlan = 60;
     break;
 
   case 'prod_SZiiSgAIWqKLAJ':
-    LiteModeBalance = 300;
-    monthyBalance = 100;
-    monthyPlan = 100;
+    monthyBalance = 200;
+    monthyPlan = 200;
     break;  
 }
 
@@ -153,7 +146,6 @@ switch (stripeProductId) {
           id: user1?.id,
         },
         data: {
-          LiteModeBalance: LiteModeBalance,
           monthyBalance: monthyBalance,
           monthyPlan: monthyPlan,
         }
@@ -164,44 +156,37 @@ switch (stripeProductId) {
     if(checkoutSession.mode == 'payment') {
               
       let amount_total_real = (checkoutSession.amount_total ?? 0) / 100;
-      var LiteModeBalance:number = 0;
       var lifetimeBalance:number = 0;
       var lifetimePlan:number = 0;
       switch (amount_total_real) {
         case 45:
-          LiteModeBalance = 100;
-          lifetimeBalance = 10;
-          lifetimePlan = 10;
+          lifetimeBalance = 30;
+          lifetimePlan = 30;
           break;
           
         case 120:
-          LiteModeBalance = 150;
-          lifetimeBalance = 30;
-          lifetimePlan = 30;
+          lifetimeBalance = 75;
+          lifetimePlan = 75;
           break;
         
         case 300:
-          LiteModeBalance = 300;
-          lifetimeBalance = 100;
-          lifetimePlan = 100;
+          lifetimeBalance = 250;
+          lifetimePlan = 250;
           break;
 
         case 3700:
-          LiteModeBalance = 100;
-          lifetimeBalance = 10;
-          lifetimePlan = 10;
-          break;
-            
-        case 10000:
-          LiteModeBalance = 150;
           lifetimeBalance = 30;
           lifetimePlan = 30;
           break;
+            
+        case 10000:
+          lifetimeBalance = 75;
+          lifetimePlan = 75;
+          break;
           
         case 25000:
-          LiteModeBalance = 300;
-          lifetimeBalance = 100;
-          lifetimePlan = 100;
+          lifetimeBalance = 250;
+          lifetimePlan = 250;
           break;
       }
 
@@ -210,7 +195,6 @@ switch (stripeProductId) {
             id: user1?.id,
           },
           data: {
-            LiteModeBalance: LiteModeBalance,
             lifetimeBalance: lifetimeBalance,
             lifetimePlan: lifetimePlan,
           }
@@ -289,44 +273,37 @@ switch (stripeProductId) {
       const stripeProductId = _subscription.items.data[0].price.product as string;
       var monthyBalance: number = 0;
       var monthyPlan: number = 0;
-      var LiteModeBalance:number = 0;
 
       switch (stripeProductId) {
         case 'prod_SNpzHYxK73pcMz':
-          monthyBalance = 10;
-          monthyPlan = 10;
-          LiteModeBalance = 100;
+          monthyBalance = 20;
+          monthyPlan = 20;
           break;
 
         case 'prod_SNpyVYxA6fTEE7':
-          monthyBalance = 30;
-          monthyPlan = 30;
-          LiteModeBalance = 150;
+          monthyBalance = 60;
+          monthyPlan = 60;
           break;
 
         case 'prod_SNpyaI8RYkPnd9':
-          monthyBalance = 100;
-          monthyPlan = 100;
-          LiteModeBalance = 300;
+          monthyBalance = 200;
+          monthyPlan = 200;
           break;
 
         case 'prod_SZigsQFIGhkCr0':
-          monthyBalance = 10;
-          monthyPlan = 10;
-          LiteModeBalance = 100;
+          monthyBalance = 20;
+          monthyPlan = 20;
           break;
           
         case 'prod_SZihMgQLGeNXb4':
-          monthyBalance = 30;
-          monthyPlan = 30;
-          LiteModeBalance = 150;
+          monthyBalance = 60;
+          monthyPlan = 60;
           break;
           
           
         case 'prod_SZiiSgAIWqKLAJ':
-          monthyBalance = 100;
-          monthyPlan = 100;
-          LiteModeBalance = 300;
+          monthyBalance = 200;
+          monthyPlan = 200;
           break;
       }
 
@@ -347,7 +324,6 @@ switch (stripeProductId) {
         data: {
           monthyBalance: monthyBalance,
           monthyPlan: monthyPlan,
-          LiteModeBalance: LiteModeBalance,
         }
       });
 

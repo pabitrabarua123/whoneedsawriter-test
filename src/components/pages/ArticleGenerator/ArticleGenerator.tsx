@@ -152,7 +152,8 @@ const ArticleGenerator: React.FC = () => {
       wordLimit?: string, // Optional as it might not be used by lite mode
       featuredImage?: string, // Optional
       imageInArticle?: string, // Optional
-      specialRequests?: string // Optional
+      specialRequests?: string, // Optional
+      selectedModel?: string // Optional
     }) => {
       const response = await fetch("/api/article-generator", {
         method: "POST",
@@ -233,6 +234,8 @@ const ArticleGenerator: React.FC = () => {
             prompt: prompt,
             is_godmode: isGodMode,
             no_of_keyword: 1,
+            balance_type: balance.balance_type,
+            selectedModel: selectedModel,
           });
         } catch (error: any) {
          // console.error(`Error processing keyword "${keywords[i]}":`, error);
@@ -268,7 +271,7 @@ const ArticleGenerator: React.FC = () => {
       openTimerPopup();
       return;
     }
-    if (keywords.length > balance.credits) {
+    if (keywords.length*2 > balance.credits) {
       toast.error("Limit Exceeded. Please shorten your list or buy more credits.");
       return;
     }
@@ -312,6 +315,7 @@ const ArticleGenerator: React.FC = () => {
         featuredImage: featuredImage,
         imageInArticle: imageInArticle,
         specialRequests: specialRequests,
+        selectedModel: selectedModel,
       });
       
       // Store all article IDs
@@ -467,31 +471,70 @@ const start25MinLoader = () => {
   };
 
   const [isGodMode, setIsGodMode] = useState<boolean>(true);
+  const [selectedModel, setSelectedModel] = useState<string>("1a-pro");
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  
   const toggleMode = () => {
     setIsGodMode(!isGodMode);
   };
+
+  const modelOptions = [
+    {
+      value: "1a-lite",
+      label: "1a Lite",
+      credits: "0.1 Credit",
+      description: "Simple content, no frills",
+      isGodMode: false
+    },
+    {
+      value: "1a-pro",
+      label: "1a Pro", 
+      credits: "2 credits",
+      description: "PhD-level & Deeply Researched",
+      isGodMode: true
+    }
+  ];
+
+  const handleModelSelect = (option: typeof modelOptions[0]) => {
+    setSelectedModel(option.value);
+    setIsGodMode(option.isGodMode);
+    setIsDropdownOpen(false);
+  };
+
+  const selectedOption = modelOptions.find(option => option.value === selectedModel) || modelOptions[1];
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.dropdown-container')) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   const [showGodModeAlert, setShowGodModeAlert] = useState<boolean>(true);
   const [balance, setBalance] = useState({credits: 0, balance_type: '', balance_text: ''});
 
   useEffect(() => {
-    if (isGodMode) {
       setShowGodModeAlert(true);
+      console.log(user);
       if(user && user?.monthyBalance > 0) {
         setBalance({...balance, credits: user.monthyBalance, balance_type: 'monthyBalance', balance_text: 'Monthly Balance'})
       }else if(user && user.lifetimeBalance > 0){
         setBalance({...balance, credits: user.lifetimeBalance, balance_type: 'lifetimeBalance', balance_text: 'Lifetime Balance'})
       }else{
-        setBalance({...balance, credits: user?.trialBalance? user.trialBalance : 0, balance_type: 'trialBalance', balance_text: 'Trial Balance'})
+        setBalance({...balance, credits: user?.freeCredits? user.freeCredits : 0, balance_type: 'freeCredits', balance_text: 'Trial Balance'})
       }
-    }else{
-     // console.log('hit hgere');
-      if(user && user?.LiteModeBalance > 0){
-        setBalance({...balance, credits: user.LiteModeBalance + user.dailyBalance, balance_type: 'LiteModeBalance', balance_text: 'Lite Mode Balance'})
-      }else{
-        setBalance({...balance, credits: user?.dailyBalance? user.dailyBalance : 0, balance_type: 'dailyBalance', balance_text: 'Lite Mode Balance'})
-      }
-    }
+    
   }, [isGodMode, user]);
 
 
@@ -615,26 +658,83 @@ fetch(geoUrl, {
         <Flex width="100%" justifyContent="space-between" alignItems="flex-start" gap={4}>
           <div className="flex flex-col w-full" data-tour="article-mode">
             <div className="flex items-center gap-4 mb-3 mode-div">
-              <Button
-                onClick={() => setIsGodMode(false)}
-                className={`flex items-center gap-1 px-7 py-2.5 border-none outline-none font-medium text-base cursor-pointer transition-all duration-200 ${
-                  !isGodMode 
-                    ? `${infoBoxBg} font-bold`
-                    : `bg-[transparent] text-slate-400`
-                }`}
-              >
-                Lite Mode
-              </Button>
-              <Button
-                onClick={() => setIsGodMode(true)}
-                className={`flex items-center gap-1 px-7 py-2.5 border-none outline-none font-medium text-base cursor-pointer transition-all duration-200 ${
-                  isGodMode 
-                    ? `${infoBoxBg} font-bold`
-                    : `bg-[transparent] text-slate-400`
-                }`}
-              >
-                God Mode
-              </Button>
+              <div className="relative dropdown-container" data-tour="article-mode">
+                <label className="block text-sm font-medium text-slate-300 mb-2">Model Selection</label>
+                <div className="relative">
+                  <button
+                    className="w-80 border border-slate-700 text-white rounded-lg pr-10 py-3 px-4 text-left flex items-center justify-between hover:border-slate-600 transition-all duration-200"
+                    style={{ backgroundColor: '#040b26' }}
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  >
+                    <span className="font-medium text-white">{selectedOption.label}</span>
+                    <svg 
+                      className={`w-4 h-4 text-slate-300 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {isDropdownOpen && (
+                    <div className="absolute top-full left-0 right-0 mt-1 border border-slate-700 rounded-lg shadow-xl z-50 overflow-hidden" style={{ backgroundColor: '#040b26' }}>
+                      {modelOptions.map((option, index) => (
+                        <div
+                          key={option.value}
+                          className={`dropdown-option p-4 cursor-pointer transition-all duration-200 ${
+                            index === 0 ? 'rounded-t-lg' : ''
+                          } ${
+                            index === modelOptions.length - 1 ? 'rounded-b-lg' : ''
+                          } ${
+                            selectedModel === option.value 
+                              ? 'border-l-2 border-blue-500' 
+                              : ''
+                          }`}
+                          style={{
+                            backgroundColor: selectedModel === option.value 
+                              ? '#1a1f3a' 
+                              : 'transparent'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedModel !== option.value) {
+                              e.currentTarget.style.backgroundColor = '#1a1f3a';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedModel !== option.value) {
+                              e.currentTarget.style.backgroundColor = 'transparent';
+                            }
+                          }}
+                          onClick={() => handleModelSelect(option)}
+                        >
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <strong className={`font-medium ${
+                                selectedModel === option.value ? 'text-blue-300' : 'text-white'
+                              }`}>
+                                {option.label}
+                              </strong>
+                              <span className={`badge text-xs px-2 py-1 rounded-full ${
+                                selectedModel === option.value 
+                                  ? 'bg-blue-600 text-blue-100' 
+                                  : 'bg-slate-700 text-slate-200'
+                              }`}>
+                                {option.credits}
+                              </span>
+                            </div>
+                            <small className={`text-sm ${
+                              selectedModel === option.value ? 'text-slate-300' : 'text-slate-400'
+                            }`}>
+                              {option.description}
+                            </small>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
               {isGodMode && (
                 <div data-tour="advanced-settings">
                   <IconButton
@@ -653,7 +753,7 @@ fetch(geoUrl, {
             <Spinner size="xs" color={spinnerColor} mr="16px" /> 
             :
             <>
-            <Text fontSize="sm" color="gray.400">{balance.balance_text}: {balance.credits}</Text>
+            <Text fontSize="sm" color="gray.400">{balance.balance_text}: {balance.credits} Credits</Text>
             { user && user?.monthyBalance === 0 && user && user?.lifetimeBalance === 0 &&
             <Text
             fontSize="sm"
@@ -668,19 +768,6 @@ fetch(geoUrl, {
             </>
           }
           </Flex>
-            </div>
-            <div className={`w-full text-sm text-slate-500 rounded-lg p-3 ${infoBoxBg2}`}>
-              {isGodMode 
-                ? (
-                  <div className="flex items-center gap-2">
-                    <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 flex-shrink-0">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                    </svg>
-                    <span>God Mode uses deep research, SERP & competitor analysis, and LSI keywords to create comprehensive, ultra HQ articles with citations.</span>
-                  </div>
-                )
-                : "Lite Mode: Generate quick, basic articles—best for Guest posts, simple topics and fast results."
-              }
             </div>
           </div>
           

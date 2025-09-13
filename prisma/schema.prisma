@@ -41,13 +41,11 @@ model User {
   emailVerified   DateTime?
   image           String?
   age             Int?
-  dailyBalance    Int              @default(30)
-  LiteModeBalance Int              @default(0)
-  monthyBalance   Int              @default(0)
+  freeCredits     Float            @default(4)
+  monthyBalance   Float            @default(0)
   monthyPlan      Int              @default(0)
-  lifetimeBalance Int              @default(0)
+  lifetimeBalance Float            @default(0)
   lifetimePlan    Int              @default(0)
-  trialBalance    Int              @default(2)
   userPlanId      String?
   role            Int              @default(0)
   createdAt       DateTime?        @default(now())

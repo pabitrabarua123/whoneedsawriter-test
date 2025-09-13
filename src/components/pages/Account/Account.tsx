@@ -113,47 +113,27 @@ export const Account = () => {
             
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-lg font-medium">
-                    Lite Mode Balance
-                  </CardTitle>
-                  <TbBolt className="h-5 w-5 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <Skeleton isLoaded={!isLoading}>
-                    <div className="text-2xl font-bold">
-                     {(user?.LiteModeBalance ?? 0) > 0 ? (user?.LiteModeBalance ?? 0) + (user?.dailyBalance ?? 0) : (user?.dailyBalance ?? 0)}
-                    </div>
-                  </Skeleton>
-                  {/* <Skeleton isLoaded={!isLoading} mt="2px">
-                    <p className="text-xs text-muted-foreground">
-                      {subscriptions?.increase} from last month
-                    </p>
-                  </Skeleton> */}
-                </CardContent>
-              </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-lg font-medium">God Mode Balance</CardTitle>
+                  <CardTitle className="text-lg font-medium">Balance</CardTitle>
                   <TbCrown className="h-5 w-5 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <Skeleton isLoaded={!isLoading}>
                     <div className="text-2xl font-bold">
-                    { user && (user?.monthyBalance > 0 || user?.trialBalance > 0 || user?.lifetimeBalance > 0) ? 
                       <p>
-                        {(user.monthyBalance ?? 0) + (user?.trialBalance ?? 0) + (user?.lifetimeBalance ?? 0)}
+                        {(user?.monthyBalance ?? 0) + (user?.freeCredits ?? 0) + (user?.lifetimeBalance ?? 0)}
+                      <span className="text-sm font-normal text-muted-foreground"> Credits</span>
                       </p> 
-                      : 0}
+                      <p className="text-xs font-normal text-muted-foreground mt-2 leading-normal">
+                        Monthly Credits: {user?.monthyBalance ?? 0} <br />
+                        Lifetime Credits: {user?.lifetimeBalance ?? 0} <br />
+                        Free Credits: {user?.freeCredits ?? 0} <br />
+                      </p>
+                      
                     </div>
                   </Skeleton>
-                  {/* <Skeleton isLoaded={!isLoading} mt="2px">
-                    <p className="text-xs text-muted-foreground">
-                      {orders?.increase} from last month
-                    </p>
-                  </Skeleton> */}
                 </CardContent>
               </Card>
               <Card>

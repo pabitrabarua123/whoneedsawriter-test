@@ -75,6 +75,18 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // Ensure this is set in .env
 });
 
+// Function to calculate credit cost based on selected model
+function getCreditCost(selectedModel: string): number {
+  switch (selectedModel) {
+    case '1a-lite':
+      return 0.1;
+    case '1a-pro':
+      return 2;
+    default:
+      return 2; // Default to 1a Pro cost
+  }
+}
+
 export async function POST(request: Request) {
   
   const session = await getServerSession(authOptions);
@@ -84,7 +96,7 @@ export async function POST(request: Request) {
   const userId = session?.user.id as string;
   
   try {
-    const {batchId, text, prompt, is_godmode, balance_type, no_of_keyword, wordLimit, featuredImage, imageInArticle, specialRequests} = await request.json();
+    const {batchId, text, prompt, is_godmode, balance_type, no_of_keyword, wordLimit, featuredImage, imageInArticle, specialRequests, selectedModel} = await request.json();
     if (!text || typeof text !== "string") {
       return NextResponse.json({ error: "Invalid keyword" }, { status: 400 });
     }
@@ -100,7 +112,7 @@ export async function POST(request: Request) {
                     userId,
                     batchId: batchId,
                     keyword: keyword,
-                    articleType: 'godmode',
+                    articleType: 'godmode123',
                     featuredImageRequired: featuredImage === 'yes' ? 'Yes' : 'No',
                     additionalImageRequired: imageInArticle === 'yes' ? 'Yes' : 'No',
                     wordLimit: wordLimit ? parseInt(wordLimit) : undefined,
@@ -122,14 +134,29 @@ export async function POST(request: Request) {
             articles.push(article);
         }
 
-        // Perform the update in a single query by calculating the updated balance directly
+        // Calculate total credit cost based on model and number of keywords
+        const creditCostPerArticle = getCreditCost(selectedModel || '1a-pro');
+        const totalCreditCost = parseFloat((no_of_keyword * creditCostPerArticle).toFixed(1));
+
+        console.log(totalCreditCost);
+        console.log(no_of_keyword);
+        console.log(creditCostPerArticle);
+        console.log(balance_type);
+
+        // Get current user balance and calculate new balance to avoid floating-point errors
+        const user = await prismaClient.user.findUnique({ where: { id: userId } });
+        if (!user) {
+          return NextResponse.json({ error: "User not found" }, { status: 404 });
+        }
+        
+        const currentBalance = user[balance_type as keyof typeof user] as number;
+        const newBalance = parseFloat((currentBalance - totalCreditCost).toFixed(1));
+        
         await prismaClient.user.update({
           where: { id: userId },
-            data: {
-              [balance_type]: {
-                decrement: no_of_keyword,
-             },
-            },
+          data: {
+            [balance_type]: newBalance,
+          },
         });
 
         // Respond to the client after all webhooks finish
@@ -155,23 +182,16 @@ export async function POST(request: Request) {
 
         // Smart balance deduction for Lite Mode
         const user = await prismaClient.user.findUnique({ where: { id: userId } });
-        const deductionAmount = no_of_keyword;
+        const creditCostPerArticle = getCreditCost(selectedModel || '1a-lite');
+        const deductionAmount = parseFloat((no_of_keyword * creditCostPerArticle).toFixed(1));
 
         if (!user) {
           return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        let liteModeDeduction = 0;
-        let dailyDeduction = 0;
-
-        if (user.LiteModeBalance >= deductionAmount) {
-          // Deduct entirely from LiteModeBalance
-          liteModeDeduction = deductionAmount;
-        } else {
-          // Deduct from LiteModeBalance first, then from dailyBalance
-          liteModeDeduction = user.LiteModeBalance;
-          dailyDeduction = deductionAmount - user.LiteModeBalance;
-        }
+        // Calculate new balance to avoid floating-point errors
+        const currentBalance = user[balance_type as keyof typeof user] as number;
+        const newBalance = parseFloat((currentBalance - deductionAmount).toFixed(1));
 
         await prismaClient.$transaction([
           prismaClient.godmodeArticles.create({
@@ -196,12 +216,7 @@ export async function POST(request: Request) {
           prismaClient.user.update({
             where: { id: userId },
             data: {
-              LiteModeBalance: {
-                decrement: liteModeDeduction,
-              },
-              dailyBalance: {
-                decrement: dailyDeduction,
-              },
+                [balance_type]: newBalance,
             },
           })
         ]);        
