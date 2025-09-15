@@ -44,7 +44,7 @@ export const PricingCopyStripe = () => {
       if (!productData) return;
       
 var country_name = 'India';
-const apiKey = 'AIzaSyARPhrTVh6j2Bu5TbdpPUTX0KuQNat2GSQ';
+const apiKey = process.env.GOOGLE_API_KEY;
 const geoUrl = `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`;
 
 const requestData = {
