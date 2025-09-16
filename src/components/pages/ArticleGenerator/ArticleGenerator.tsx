@@ -528,11 +528,11 @@ const start25MinLoader = () => {
       setShowGodModeAlert(true);
       console.log(user);
       if(user && user?.monthyBalance > 0) {
-        setBalance({...balance, credits: user.monthyBalance, balance_type: 'monthyBalance', balance_text: 'Monthly Balance'})
+        setBalance({...balance, credits: user.monthyBalance, balance_type: 'monthyBalance', balance_text: 'Credits'})
       }else if(user && user.lifetimeBalance > 0){
-        setBalance({...balance, credits: user.lifetimeBalance, balance_type: 'lifetimeBalance', balance_text: 'Lifetime Balance'})
+        setBalance({...balance, credits: user.lifetimeBalance, balance_type: 'lifetimeBalance', balance_text: 'Credits'})
       }else{
-        setBalance({...balance, credits: user?.freeCredits? user.freeCredits : 0, balance_type: 'freeCredits', balance_text: 'Trial Balance'})
+        setBalance({...balance, credits: user?.freeCredits? user.freeCredits : 0, balance_type: 'freeCredits', balance_text: 'Credits'})
       }
     
   }, [isGodMode, user]);
@@ -574,7 +574,7 @@ const { data: productData, isLoading: isLoadingPrice, error: errorPrice } = useQ
       // Early return if productData is not available yet
       if (!productData) return;
       
-const apiKey = process.env.GOOGLE_API_KEY;
+const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 const geoUrl = `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`;
 
 const requestData = {
