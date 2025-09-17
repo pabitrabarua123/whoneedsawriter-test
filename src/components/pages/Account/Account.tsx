@@ -547,7 +547,7 @@ export const Account = () => {
                       </div>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-700">Type "DELETE" to confirm</label>
+                      <label className="text-sm font-medium text-gray-700">Type &quot;DELETE&quot; to confirm</label>
                       <input
                         type="text"
                         value={deleteConfirmation}
