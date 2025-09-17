@@ -265,7 +265,7 @@ fetch(geoUrl, {
       {!isLoadingPrice &&
             <Section mt="60px" alignItems="center" className="block max-w-[1000px] my-5 mx-auto">
             {/* Tabs */}
-            <div className="flex justify-center p-4">
+            {/* <div className="flex justify-center p-4">
               <div className="flex">
                 <button 
                   className={`px-5 py-2 font-medium border border-[rgba(255,255,255,0.2)] 
@@ -288,7 +288,7 @@ fetch(geoUrl, {
                   Pay-per-Credit
                 </button>
               </div>
-            </div>
+            </div> */}
     
             {/* Content Area with Plans */}
             <div className="overflow-y-auto">

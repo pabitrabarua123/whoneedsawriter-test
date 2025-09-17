@@ -9,15 +9,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { getNameInitials } from "../utils/getNameInitials";
 import { CreateWorkspaceModal } from "@/components/organisms/CreateWorkspaceModal/CreateWorkspaceModal";
 import { useState } from "react";
 import { onLoadCustomerPortal } from "@/components/AccountMenu/AccountMenu";
+import { useRouter } from "next/navigation";
 
 export function UserNav() {
   const { data: session } = useSession();
-
+  const router = useRouter();
   const userName = session?.user.name;
   const userEmail = session?.user.email;
   const userPictureUrl = session?.user.image;
@@ -31,7 +32,7 @@ export function UserNav() {
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
               <AvatarImage src={userPictureUrl} alt={userName} />
-              <AvatarFallback>{getNameInitials(userName)}</AvatarFallback>
+              <AvatarFallback>{getNameInitials(userName || userEmail)}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
@@ -46,12 +47,24 @@ export function UserNav() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
+            <DropdownMenuItem onClick={() => router.push("/account")}>
+              Change Email
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem onClick={() => router.push("/account")}>
+              Delete Account
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
             <DropdownMenuItem onClick={() => onLoadCustomerPortal()}>
               Billing
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Log out</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => signOut({callbackUrl: "/",})}>Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <CreateWorkspaceModal

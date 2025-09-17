@@ -482,7 +482,7 @@ const start25MinLoader = () => {
     {
       value: "1a-lite",
       label: "1a Lite",
-      credits: "0.1 Credit",
+      credits: "0.1 Credits",
       description: "Simple content, no frills",
       isGodMode: false
     },
@@ -527,15 +527,25 @@ const start25MinLoader = () => {
   useEffect(() => {
       setShowGodModeAlert(true);
       console.log(user);
+      
+      const totalCredits = (user?.monthyBalance || 0) + (user?.lifetimeBalance || 0) + (user?.freeCredits || 0);
+      let balanceType = '';
+      
       if(user && user?.monthyBalance > 0) {
-        setBalance({...balance, credits: user.monthyBalance, balance_type: 'monthyBalance', balance_text: 'Credits'})
-      }else if(user && user.lifetimeBalance > 0){
-        setBalance({...balance, credits: user.lifetimeBalance, balance_type: 'lifetimeBalance', balance_text: 'Credits'})
-      }else{
-        setBalance({...balance, credits: user?.freeCredits? user.freeCredits : 0, balance_type: 'freeCredits', balance_text: 'Credits'})
+        balanceType = 'monthyBalance';
+      } else if(user && user.lifetimeBalance > 0){
+        balanceType = 'lifetimeBalance';
+      } else {
+        balanceType = 'freeCredits';
       }
+      
+      setBalance({
+        credits: totalCredits,
+        balance_type: balanceType,
+        balance_text: 'Credits'
+      });
     
-  }, [isGodMode, user]);
+  }, [user]);
 
 
 const { data: productData, isLoading: isLoadingPrice, error: errorPrice } = useQuery({
@@ -753,7 +763,7 @@ fetch(geoUrl, {
             <Spinner size="xs" color={spinnerColor} mr="16px" /> 
             :
             <>
-            <Text fontSize="sm" color="gray.400">{balance.balance_text}: {balance.credits} Credits</Text>
+            <Text fontSize="sm" color="gray.400">{balance.balance_text}: {balance.credits}</Text>
             { user && user?.monthyBalance === 0 && user && user?.lifetimeBalance === 0 &&
             <Text
             fontSize="sm"
@@ -1227,7 +1237,7 @@ const PricingPopup: React.FC<PricingPopupProps> = ({ isOpen, onClose, activeTab,
         <ModalCloseButton />
         <ModalBody pb={6} overflowY="auto">
                      {/* Tabs */}
-           <div className="flex justify-center mb-4">
+           {/* <div className="flex justify-center mb-4">
              <div className="flex">
                <button 
                  className={`px-5 py-2 font-medium border rounded-l-lg cursor-pointer
@@ -1256,7 +1266,7 @@ const PricingPopup: React.FC<PricingPopupProps> = ({ isOpen, onClose, activeTab,
                  Pay-per-Credit
                </button>
              </div>
-           </div>
+           </div> */}
 <br/>
           {/* Content Area with Plans */}
           {activeTab === 'monthly' ? (
