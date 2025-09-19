@@ -4,9 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { UserPlanStatusResponse } from "@/app/api/user-plan-status/route";
 import { TbCrown } from "react-icons/tb";
+import { PricingPopupContext } from "@/app/PricingPopupProvider";
+import { useContext } from "react";
 
 export const PlanStatus = () => {
-  
+  const { onOpen: onPricingPopupOpen } = useContext(PricingPopupContext);
   const { data: planData, isLoading } = useQuery({
     queryFn: () => {
       return axios.get<UserPlanStatusResponse>("/api/user-plan-status");
@@ -69,6 +71,7 @@ export const PlanStatus = () => {
         <div className={`px-3 py-1 rounded-full border text-sm font-medium flex items-center space-x-1 ${getPlanColor(plan.planName)}`}>
           {getPlanIcon(plan.planName)}
           <span>Current Plan: {plan.planName}</span>
+          <span onClick={onPricingPopupOpen}>Change Plan</span>
         </div>
       </div>
       {plan.planName !== "Free" && (

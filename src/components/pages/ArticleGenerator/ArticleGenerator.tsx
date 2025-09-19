@@ -31,6 +31,7 @@ import {
 import { LuTimerReset } from "react-icons/lu";
 import { FiSettings, FiInfo } from "react-icons/fi";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
+import { GiCheckMark } from "react-icons/gi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { User } from "@prisma/client";
@@ -46,6 +47,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import GodmodeLoader from "./GodmodeLoader";
 import { TourGuide, useTourStatus, articleGeneratorTourSteps, articleGeneratorGodModeTourSteps } from "@/components/TourGuide";
+import DashboardHeader from "@/components/organisms/DashboardHeader/DashboardHeader"; 
 
 const ArticleGenerator: React.FC = () => {
   
@@ -90,6 +92,7 @@ const ArticleGenerator: React.FC = () => {
       queryKey: ["user"],
       queryFn: async () => {
         const response = await fetch('/api/user');
+        console.log(response);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -99,7 +102,7 @@ const ArticleGenerator: React.FC = () => {
       }
   });
   const user = userData?.user ?? null;
- // console.log(user);
+  //console.log(user, isLoading);
 
   // Auto-start tour for new users
   useEffect(() => {
@@ -241,7 +244,6 @@ const ArticleGenerator: React.FC = () => {
          // console.error(`Error processing keyword "${keywords[i]}":`, error);
           toast.error(`Error creating article for the keyword: "${keywords[i]}"`);
         }
-        
         let progressPercent = ((i + 1) / keywords.length) * 100;
         setProgress(progressPercent); // Jump to the actual progress when result is received
       }
@@ -474,22 +476,20 @@ const start25MinLoader = () => {
   const [selectedModel, setSelectedModel] = useState<string>("1a-pro");
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   
-  const toggleMode = () => {
-    setIsGodMode(!isGodMode);
-  };
+
 
   const modelOptions = [
     {
       value: "1a-lite",
       label: "1a Lite",
-      credits: "0.1 Credits",
+      credits: "0.1 Credit",
       description: "Simple content, no frills",
       isGodMode: false
     },
     {
       value: "1a-pro",
       label: "1a Pro", 
-      credits: "2 credits",
+      credits: "2 Credits",
       description: "PhD-level & Deeply Researched",
       isGodMode: true
     }
@@ -526,7 +526,7 @@ const start25MinLoader = () => {
 
   useEffect(() => {
       setShowGodModeAlert(true);
-      console.log(user);
+      //console.log(user);
       
       const totalCredits = (user?.monthyBalance || 0) + (user?.lifetimeBalance || 0) + (user?.freeCredits || 0);
       let balanceType = '';
@@ -646,34 +646,37 @@ fetch(geoUrl, {
   const [featuredImage, setFeaturedImage] = useState("yes");
   const [imageInArticle, setImageInArticle] = useState("no");
   const [specialRequests, setSpecialRequests] = useState("");
-
-  const infoBoxBg = useColorModeValue("bg-[#f3f4f5]", "bg-[#2196f3]");
-  const infoBoxBg2 = useColorModeValue("bg-[#f5f7f9]", "bg-[#060d34]");
-  const mytext = useColorModeValue("text-[#343232]", "text-white");
-  const toolborder = useColorModeValue("border-[#e9e9f7]", "border-[#111b28]");
+  const [enableInfographics, setEnableInfographics] = useState(false);
+  const [enableExternalLinks, setEnableExternalLinks] = useState(false);
 
   return (
-    <Container pt={["16px", "30px"]} alignItems="flex-center" maxWidth={700}>
+    <Flex justifyContent="flex-start" w="100%" minH="100vh">
+        <div className="flex-col w-full">
+
+        <DashboardHeader />
+
+    <Container pt={["96px", "110px"]} alignItems="flex-center" maxWidth="1050px" mb="56px">
       <VStack align="flex-start" spacing={6} width="100%">
+      
+      <Box className="border border-[#ffffff14] rounded-2xl p-[22px] w-full mb-4 bg-gradient-to-b from-[#151923] to-[#131827]" style={{ boxShadow: '0 10px 30px rgba(0,0,0,.35)' }}>
         {/* Header Section */}
         <VStack align="flex-start" spacing={2} width="100%">
-          <Heading size="lg" color="white">Article Generator</Heading>
-          <Text className="text-slate-500 text-md">
-            Generate up to 10 Articles in One Batch
+         <Heading size="lg" color="#eef2f7">What do you want to write today?</Heading>
+          <Text className="text-[#a9b1c3] text-md">
+          Describe your topic or paste keywords.
           </Text>
         </VStack>
-      
-        <Box className={`border ${toolborder} rounded-lg p-4 w-full mb-4`}>
         {/* Mode Selection and Balance Section */}
         <Flex width="100%" justifyContent="space-between" alignItems="flex-start" gap={4}>
           <div className="flex flex-col w-full" data-tour="article-mode">
-            <div className="flex items-center gap-4 mb-3 mode-div">
-              <div className="relative dropdown-container" data-tour="article-mode">
-                <label className="block text-sm font-medium text-slate-300 mb-2">Model Selection</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-3.5 mb-3">
+              <div className="flex flex-col w-full">
+                <div className="bg-[#1b2232] rounded-lg p-4 flex-1 border border-[#ffffff14]">
+                  <label className="block text-sm text-[#7f8aa3] mb-3">Model Selection</label>
+                  <div className="relative dropdown-container" data-tour="article-mode">
                 <div className="relative">
                   <button
-                    className="w-80 border border-slate-700 text-white rounded-lg pr-10 py-3 px-4 text-left flex items-center justify-between hover:border-slate-600 transition-all duration-200"
-                    style={{ backgroundColor: '#040b26' }}
+                    className="w-[100%] bg-[#0e1322] border border-[#ffffff14] text-white rounded-lg py-3 px-4 text-left flex items-center justify-between"
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   >
                     <span className="font-medium text-white">{selectedOption.label}</span>
@@ -688,77 +691,75 @@ fetch(geoUrl, {
                   </button>
                   
                   {isDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-1 border border-slate-700 rounded-lg shadow-xl z-50 overflow-hidden" style={{ backgroundColor: '#040b26' }}>
+                    <div className="absolute top-full left-0 right-0 mt-1 border border-[#ffffff14] bg-[#151923] rounded-lg z-50 overflow-hidden"
+                    style={{ boxShadow: '0 10px 30px rgba(0,0,0,.35)' }}>
                       {modelOptions.map((option, index) => (
                         <div
                           key={option.value}
-                          className={`dropdown-option p-4 cursor-pointer transition-all duration-200 ${
+                          className={`dropdown-option p-4 cursor-pointer transition-all duration-200 hover:bg-[#ffffff0d] ${
                             index === 0 ? 'rounded-t-lg' : ''
                           } ${
                             index === modelOptions.length - 1 ? 'rounded-b-lg' : ''
-                          } ${
-                            selectedModel === option.value 
-                              ? 'border-l-2 border-blue-500' 
-                              : ''
                           }`}
-                          style={{
-                            backgroundColor: selectedModel === option.value 
-                              ? '#1a1f3a' 
-                              : 'transparent'
-                          }}
                           onMouseEnter={(e) => {
-                            if (selectedModel !== option.value) {
-                              e.currentTarget.style.backgroundColor = '#1a1f3a';
-                            }
+                            e.currentTarget.style.backgroundColor = '#1a1f3a';
                           }}
                           onMouseLeave={(e) => {
-                            if (selectedModel !== option.value) {
-                              e.currentTarget.style.backgroundColor = 'transparent';
-                            }
+                            e.currentTarget.style.backgroundColor = 'transparent';
                           }}
                           onClick={() => handleModelSelect(option)}
                         >
                           <div>
                             <div className="flex items-center gap-2 mb-1">
-                              <strong className={`font-medium ${
-                                selectedModel === option.value ? 'text-blue-300' : 'text-white'
-                              }`}>
+                              <strong className="font-medium text-white">
                                 {option.label}
                               </strong>
-                              <span className={`badge text-xs px-2 py-1 rounded-full ${
-                                selectedModel === option.value 
-                                  ? 'bg-blue-600 text-blue-100' 
-                                  : 'bg-slate-700 text-slate-200'
-                              }`}>
+                              <span className="badge text-[10px] px-2 py-1 font-bold rounded-full bg-[#1b2232] text-[#a9b1c3] border border-[#ffffff14]">
                                 {option.credits}
                               </span>
+                              { selectedModel === option.value && (
+                                <GiCheckMark className="w-3 h-3 text-[#4da3ff] ml-auto" />
+                              )}
                             </div>
-                            <small className={`text-sm ${
-                              selectedModel === option.value ? 'text-slate-300' : 'text-slate-400'
-                            }`}>
+                            <small className="text-xs text-[#7f8aa3]">
                               {option.description}
                             </small>
                           </div>
                         </div>
                       ))}
                     </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
-              {isGodMode && (
-                <div data-tour="advanced-settings">
-                  <IconButton
-                    aria-label="Settings"
-                    icon={<FiSettings />}
-                    onClick={() => setIsSettingsPopupOpen(true)}
-                    variant="ghost"
-                    size="sm"
-                    color="gray.400"
-                    _hover={{ color: "white" }}
-                  />
+              </div>
+              <div className="flex flex-col w-full">
+                <div className="bg-[#1b2232] rounded-lg p-4 flex-1 border border-[#ffffff14]">
+                  <label className="block text-sm text-[#7f8aa3] mb-3">Word Count</label>
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <input
+                        type="range"
+                        min="500"
+                        max="3000"
+                        step="100"
+                        value={wordLimit}
+                        onChange={(e) => setWordLimit(e.target.value)}
+                         className="w-full bg-slate-700 rounded-lg appearance-none cursor-pointer slider slider-sm"
+                         style={{
+                          padding: '0px',
+                           background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((parseInt(wordLimit) - 500) / (3000 - 500)) * 100}%,rgb(246, 247, 249) ${((parseInt(wordLimit) - 500) / (3000 - 500)) * 100}%,rgb(232, 236, 243) 100%)`
+                         }}
+                      />
+                    </div>
+                    <div className="text-left">
+                      <span className="text-white text-sm">{wordLimit}</span>
+                    </div>
+                  </div>
                 </div>
-              )}
-          <Flex direction="column" alignItems="flex-end" width="100%" className="balance-div">
+              </div>
+
+          {/* <Flex direction="column" alignItems="flex-end" width="100%" className="balance-div">
             { isLoading ?
             <Spinner size="xs" color={spinnerColor} mr="16px" /> 
             :
@@ -777,12 +778,57 @@ fetch(geoUrl, {
             }
             </>
           }
-          </Flex>
+          </Flex> */}
             </div>
           </div>
-          
-
         </Flex>
+
+        {/* Options - Stylish Checkboxes */}
+        { selectedModel === '1a-pro' && (
+        <div className="flex flex-wrap gap-4 mt-6 mb-8">
+          <button
+            type="button"
+            onClick={() => setFeaturedImage(prev => (prev === 'yes' ? 'no' : 'yes'))}
+            className={`w-fit flex items-center gap-3 px-5 py-3 rounded-full border bg-[#1b2232] border-[#ffffff14] hover-gradient`}
+            style={{ transition: 'background .2s ease, box-shadow .2s ease, border-color .2s ease' }}
+          >
+            <span className={`w-4 h-4 rounded-[4px] flex items-center justify-center ${
+              featuredImage === 'yes' ? 'bg-[#6c8cff]' : 'bg-[#0e1322]'
+            }`}>
+              {featuredImage === 'yes' && <GiCheckMark className="text-white w-2.5 h-2.5" />}
+            </span>
+            <span className="text-[#eef2f7] font-bold text-xs">Featured image</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setEnableInfographics(prev => !prev)}
+            className={`w-fit flex items-center gap-3 px-5 py-3 rounded-full border bg-[#1b2232] border-[#ffffff14] hover-gradient`}
+            style={{ transition: 'background .2s ease, box-shadow .2s ease, border-color .2s ease' }}
+          >
+            <span className={`w-4 h-4 rounded-[4px] flex items-center justify-center ${
+              enableInfographics ? 'bg-[#6c8cff]' : 'bg-[#0e1322]'
+            }`}>
+              {enableInfographics && <GiCheckMark className="text-white w-2.5 h-2.5" />}
+            </span>
+            <span className="text-[#eef2f7] font-bold text-xs">Infographics</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setEnableExternalLinks(prev => !prev)}
+            className={`w-fit flex items-center gap-3 px-5 py-3 bg-[#1b2232] border-[#ffffff14] rounded-full border hover-gradient`}
+            style={{ transition: 'background .2s ease, box-shadow .2s ease, border-color .2s ease' }}
+          >
+            <span className={`w-4 h-4 rounded-[4px] flex items-center justify-center ${
+              enableExternalLinks ? 'bg-[#6c8cff]' : 'bg-[#0e1322]'
+            }`}>
+              {enableExternalLinks && <GiCheckMark className="text-white w-2.5 h-2.5" />}
+            </span>
+            <span className="text-[#eef2f7] font-bold text-xs">External links</span>
+          </button>
+        </div>
+        )}
 
         {/* Lite Mode Change Prompt */}
         {!isGodMode && (
@@ -803,28 +849,31 @@ fetch(geoUrl, {
         )}
 
         {/* Batch Details Section */}
-        <VStack align="flex-start" spacing={3} width="100%" mt="20px">
-          <Heading className={`${mytext} font-normal text-[18px]`}>Batch details</Heading>
-          <Input
-            placeholder="Batch name (Optional)"
-            defaultValue={batchRef.current}
-            onChange={(e) => handleBatchChange(e.target.value)}
-            className="rounded-md w-1/2 flex-grow text-slate-500"
-          />
+        <VStack align="flex-start" spacing={2} width="100%" mt="16px">
+          <Heading className={`font-normal text-[13px] text-[#7f8aa3]`}>Batch name (optional)</Heading>
+          <input
+             placeholder="e.g., March SEO Batch or Client ABC - Pillar Posts"
+             defaultValue={batchRef.current}
+             onChange={(e) => handleBatchChange(e.target.value)}
+             className="flex-grow text-[13px] placeholder:text-[#7f8aa3] placeholder:text-[13px]"
+             style={{ height: '44px' }}
+            />
         </VStack>
 
         {/* Keywords Section */}
-        <VStack align="flex-start" spacing={3} width="100%" data-tour="keyword-input" mt="13px">
-          <Heading className={`${mytext} font-normal text-[18px]`}>Keywords</Heading>
-          <Textarea
-            className="wtext-sm rounded-md w-full flex-grow text-slate-500 ca"
-            placeholder="Keywords (Add 1 Per Line)"
-            height="250px"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
+        <VStack align="flex-start" spacing={2} width="100%" data-tour="keyword-input" mt="16px">
+          <Heading className={`font-normal text-[13px] text-[#7f8aa3]`}>Keywords (one per line)</Heading>
+          <textarea
+              className="wtext-sm w-full flex-grow ca text-[13px] placeholder:text-[#7f8aa3] placeholder:text-[13px]"
+              placeholder={`ai content tools
+what is content automation
+seo content writing tips`}
+              style={{ height: "200px" }}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+             />
           { lines.length > 0 &&
-           <Text className="text-slate-500 text-sm">
+           <Text className="text-[#7f8aa3] text-[13px]">
             Keywords Added: {lines.length} | 
             Estimated Time: 
             { !isGodMode ? 
@@ -836,36 +885,52 @@ fetch(geoUrl, {
           }
         </VStack>
 
+        {/* Special Instructions (optional) */}
+        <VStack align="flex-start" spacing={2} width="100%" data-tour="keyword-input" mt="16px">
+          <Heading className={`font-normal text-[13px] text-[#7f8aa3]`}>Special Instructions (optional)</Heading>
+          <textarea
+              className="wtext-sm w-full flex-grow ca text-[13px] placeholder:text-[#7f8aa3] placeholder:text-[13px]"
+              placeholder={`Example: Mention my Brand ABCD.com as the most preferred or top ranked option wherever applicable`}
+              style={{ height: "100px" }}
+              value={specialRequests}
+              onChange={(e) => setSpecialRequests(e.target.value)}
+           />
+        </VStack>
+
         {/* Action Buttons */}
         <Flex gap={4} data-tour="generate-button" mt="16px" className="flex-col md:flex-row justify-end">
           <Button
             variant="outline"
             borderColor="gray.600"
-            className="text-slate-500"
-            _hover={{ borderColor: "gray.500", color: "white" }}
+            className="text-[13px]"
+            _hover={{ borderColor: "gray.500" }}
             onClick={() => setText('')}
             disabled={isProcessing}
+            rounded="lg"
+            px={4}
+            color="#eef2f7"
           >
             Clear
           </Button>
           <Button
             colorScheme="brand"
-            _hover={{ bg: "blue.700" }}
+            px={4}
+            rounded="lg"
+            _hover={{ bg: "blue.700", color: "white" }}
             onClick={() =>
               isGodMode
                 ? sendKeywordsSequentiallyGodmode(lines)
                 : sendKeywordsSequentially(lines)
             }
             disabled={isProcessing}
-            px={8}
           >
-            {isProcessing ? 'Generating...' : 'Generate'}
+            {isProcessing ? 'Generating...' : '✨ Generate Article(s)'}
           </Button>
         </Flex>
 
 
         { isProcessing &&
-          <p className="text-slate-500 text-sm">
+          <p className="text-[#7f8aa3] text-[13px]">
             Please do not close the window.
           </p>
         }
@@ -884,7 +949,7 @@ fetch(geoUrl, {
         }}
       />
     </div>
-    <p className="mt-2 text-slate-500 text-sm">{Math.round(progress)}% Complete</p>
+    <p className="mt-2 text-[#7f8aa3] text-[13px]">{Math.round(progress)}% Complete</p>
   </div>
 }
        { isProcessingGodmode && isGodMode && 
@@ -892,7 +957,7 @@ fetch(geoUrl, {
            <GodmodeLoader progress={progressGodmode} isProcessing={GodModeLoader} />
            { !GodModeLoader && godmodeStatus === 'Full' &&
               <VStack spacing={2}>
-                  <Text className="text-slate-500">
+                  <Text className="text-[#7f8aa3] text-[13px]">
                    Articles generated successfully.
                   </Text>
                   <br/>
@@ -907,7 +972,7 @@ fetch(geoUrl, {
            }
            { !GodModeLoader && godmodeStatus === 'Partial' &&
              <VStack spacing={2}>
-              <Text className="text-slate-500">
+              <Text className="text-[#7f8aa3] text-[13px]">
                {godmodeArticlePrepared.length} Articles Completed. {godmodeArticleRemain} articles are still in progress, we will email you when completed.
               </Text>
               <br/>
@@ -939,6 +1004,115 @@ fetch(geoUrl, {
        }
         </Box>
     </VStack>
+
+     <VStack align="flex-start" spacing={6} width="100%">
+       <Box className="border border-[#ffffff14] rounded-2xl p-[22px] w-full mb-4 bg-gradient-to-b from-[#151923] to-[#131827]" style={{ boxShadow: '0 10px 30px rgba(0,0,0,.35)' }}>
+         <Heading className="text-white font-normal text-[18px] mb-4">Sample Articles</Heading>
+         <div className="flex flex-wrap gap-3">
+           <button
+             type="button"
+             className="w-fit flex items-center gap-3 px-3 py-2 rounded-full border bg-[#1b2232] border-[#ffffff14] hover-gradient"
+             style={{ transition: 'background .2s ease, box-shadow .2s ease, border-color .2s ease' }}
+           >
+             <div className="w-6 h-6 flex items-center justify-center">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="white" strokeWidth="2" fill="none"/>
+                 <line x1="7" y1="8" x2="17" y2="8" stroke="#ff6b35" strokeWidth="2"/>
+                 <line x1="7" y1="12" x2="17" y2="12" stroke="#ff6b35" strokeWidth="2"/>
+                 <line x1="7" y1="16" x2="13" y2="16" stroke="#ff6b35" strokeWidth="2"/>
+                 <path d="M15 2l3 3-3 3" stroke="#ff6b35" strokeWidth="2" fill="none"/>
+               </svg>
+             </div>
+             <span className="text-[13px] text-[#eef2f7]">Short Blog Post</span>
+           </button>
+
+           <button
+             type="button"
+             className="w-fit flex items-center gap-3 px-4 py-2 rounded-full border bg-[#1b2232] border-[#ffffff14] hover-gradient"
+             style={{ transition: 'background .2s ease, box-shadow .2s ease, border-color .2s ease' }}
+           >
+             <div className="w-6 h-6 flex items-center justify-center">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                 <rect x="3" y="3" width="7" height="7" rx="1" fill="#10b981"/>
+                 <rect x="10" y="6" width="7" height="7" rx="1" fill="#3b82f6"/>
+                 <rect x="14" y="10" width="7" height="7" rx="1" fill="#ef4444"/>
+               </svg>
+             </div>
+             <span className="text-[13px] text-[#eef2f7]">Long-Form Guide</span>
+           </button>
+
+           <button
+             type="button"
+             className="w-fit flex items-center gap-3 px-4 py-2 rounded-full border bg-[#1b2232] border-[#ffffff14] hover-gradient"
+             style={{ transition: 'background .2s ease, box-shadow .2s ease, border-color .2s ease' }}
+           >
+             <div className="w-6 h-6 flex items-center justify-center">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                 <path d="M9 12l2 2 4-4" stroke="#d97706" strokeWidth="2" fill="none"/>
+                 <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3" stroke="#d97706" strokeWidth="2" fill="none"/>
+                 <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3" stroke="#d97706" strokeWidth="2" fill="none"/>
+                 <path d="M9 6h6" stroke="#d97706" strokeWidth="2"/>
+                 <path d="M9 18h6" stroke="#d97706" strokeWidth="2"/>
+               </svg>
+             </div>
+             <span className="text-[13px] text-[#eef2f7]">Listicle</span>
+           </button>
+
+           <button
+             type="button"
+             className="w-fit flex items-center gap-3 px-4 py-2 rounded-full border bg-[#1b2232] border-[#ffffff14] hover-gradient"
+             style={{ transition: 'background .2s ease, box-shadow .2s ease, border-color .2s ease' }}
+           >
+             <div className="w-6 h-6 flex items-center justify-center">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="#3b82f6" strokeWidth="2" fill="none"/>
+                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="#3b82f6" strokeWidth="2" fill="none"/>
+                 <path d="M8 7h8" stroke="white" strokeWidth="2"/>
+                 <path d="M8 11h8" stroke="white" strokeWidth="2"/>
+                 <path d="M8 15h6" stroke="white" strokeWidth="2"/>
+               </svg>
+             </div>
+             <span className="text-[13px] text-[#eef2f7]">How to Guide</span>
+           </button>
+
+           <button
+             type="button"
+             className="w-fit flex items-center gap-3 px-4 py-2 rounded-full border bg-[#1b2232] border-[#ffffff14] hover-gradient"
+             style={{ transition: 'background .2s ease, box-shadow .2s ease, border-color .2s ease' }}
+           >
+             <div className="w-6 h-6 flex items-center justify-center">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="#fbbf24" strokeWidth="2" fill="none"/>
+                 <path d="M8 12l2 2 4-4" stroke="#fbbf24" strokeWidth="2" fill="none"/>
+               </svg>
+             </div>
+             <span className="text-[13px] text-[#eef2f7]">Comparison</span>
+           </button>
+
+           <button
+             type="button"
+             className="w-fit flex items-center gap-3 px-4 py-2 rounded-full border bg-[#1b2232] border-[#ffffff14] hover-gradient"
+             style={{ transition: 'background .2s ease, box-shadow .2s ease, border-color .2s ease' }}
+           >
+             <div className="w-6 h-6 flex items-center justify-center">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                 <circle cx="12" cy="12" r="10" stroke="#ec4899" strokeWidth="2" fill="none"/>
+                 <circle cx="12" cy="12" r="3" fill="#3b82f6"/>
+                 <path d="M12 1v6" stroke="#ec4899" strokeWidth="2"/>
+                 <path d="M12 17v6" stroke="#ec4899" strokeWidth="2"/>
+                 <path d="M4.22 4.22l4.24 4.24" stroke="#ec4899" strokeWidth="2"/>
+                 <path d="M15.54 15.54l4.24 4.24" stroke="#ec4899" strokeWidth="2"/>
+                 <path d="M1 12h6" stroke="#ec4899" strokeWidth="2"/>
+                 <path d="M17 12h6" stroke="#ec4899" strokeWidth="2"/>
+                 <path d="M4.22 19.78l4.24-4.24" stroke="#ec4899" strokeWidth="2"/>
+                 <path d="M15.54 8.46l4.24-4.24" stroke="#ec4899" strokeWidth="2"/>
+               </svg>
+             </div>
+             <span className="text-[13px] text-[#eef2f7]">Product Review</span>
+           </button>
+         </div>
+       </Box>
+     </VStack>
 
       {isEditPromptDialogOpen && (
         <EditPromptDialog
@@ -997,6 +1171,8 @@ fetch(geoUrl, {
       />
 
     </Container>
+    </div>
+    </Flex>
   );
 };
 

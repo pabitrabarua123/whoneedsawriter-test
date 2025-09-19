@@ -6,29 +6,48 @@
 .slider {
   -webkit-appearance: none;
   appearance: none;
-  height: 6px;
-  border-radius: 3px;
+  height: 8px;
+  border-radius: 4px;
   outline: none;
+  background: #374151;
 }
 
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 0;
-  height: 0;
-  background: transparent;
-  cursor: default;
+  width: 20px;
+  height: 20px;
+  background: #3b82f6;
+  cursor: pointer;
+  border-radius: 50%;
   border: none;
-  box-shadow: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .slider::-moz-range-thumb {
-  width: 0;
-  height: 0;
-  background: transparent;
-  cursor: default;
+  width: 20px;
+  height: 20px;
+  background: #3b82f6;
+  cursor: pointer;
+  border-radius: 50%;
   border: none;
-  box-shadow: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Small slider variant */
+  .slider.slider-sm {
+    height: 7px !important;
+    border-radius: 7px;
+  }
+
+.slider.slider-sm::-webkit-slider-thumb {
+  width: 14.6px;
+  height: 14.6px;
+}
+
+.slider.slider-sm::-moz-range-thumb {
+  width: 14.6px;
+  height: 14.6px;
 }
 
 html {
@@ -38,11 +57,11 @@ html {
 html.dark,
 html.dark body {
   /* background-color: #1a202c; */
-  background-image: linear-gradient(to left, #020817, #070f3f 100%);
+  background-image: linear-gradient(180deg, #0e1014, #0b0d12 30%, #0a0c11 100%);
 }
 
 body.chakra-ui-dark  {
-  background-image: linear-gradient(to left, #020817, #070f3f 100%);
+  background-image: linear-gradient(180deg, #0e1014, #0b0d12 30%, #0a0c11 100%);
 }
 
 @layer base {
@@ -224,5 +243,10 @@ body.chakra-ui-dark  {
   
   .delay-1000 {
     animation-delay: 1000ms;
+  }
+  
+  /* Custom hover gradient for checkbox buttons */
+  .hover-gradient:hover {
+    background: linear-gradient(135deg, rgba(77,163,255,.25), rgba(139,92,246,.25));
   }
 }

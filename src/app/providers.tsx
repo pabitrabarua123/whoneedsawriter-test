@@ -16,7 +16,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-
+import { PricingPopupProvider } from "./PricingPopupProvider";
+import { PricingPopupContext } from "./PricingPopupProvider";
 export const queryClient = new QueryClient();
 
 // Custom hook to handle route changes and cancel queries
@@ -68,7 +69,9 @@ export function Providers({
               theme={theme}
               colorModeManager={cookieStorageManager}
             >
-              {children}
+               <PricingPopupProvider>
+               {children}
+               </PricingPopupProvider>
             </ChakraProvider>
           </NextThemesProvider>
         </CacheProvider>

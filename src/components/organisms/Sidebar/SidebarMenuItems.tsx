@@ -10,6 +10,8 @@ import {
   Link as ChakraLink,
   Spinner,
   useColorModeValue,
+  Button,
+  Badge,
 } from "@chakra-ui/react";
 import {
   TbUsers,
@@ -19,7 +21,14 @@ import {
   TbRocket,
   TbChecklist,
   TbKey,
+  TbWand,
+  TbHistory,
+  TbUser,
 } from "react-icons/tb";
+import { FaFolderOpen } from "react-icons/fa6";
+import { MdEditSquare } from "react-icons/md";
+import { RiEditBoxFill } from "react-icons/ri";
+import { RiEdit2Fill } from "react-icons/ri";
 import { Routes } from "../../../data/routes";
 import { brandName, cannyUrl } from "@/config";
 import { Logo, LogoLight } from "@/components/atoms/Logo/Logo";
@@ -192,7 +201,7 @@ export const SidebarMenuItems: React.FC<MenuProps> = ({
   loadingRoute,
   onMenuItemClick,
 }) => {
-  const sectionColor = useColorModeValue("blackAlpha.900", "whiteAlpha.900");
+  const textColor = "#7f8aa3";
   const LogoComponent = useColorModeValue(LogoLight, Logo);
   const router = useRouter();
 
@@ -212,118 +221,138 @@ export const SidebarMenuItems: React.FC<MenuProps> = ({
   }, [router]);
 
   return (
-    <Box p="0" width="100%">
-      <Flex alignItems="flex-start" flexDirection="column">
-        <Flex alignItems="center" mb="24px">
-          <Flex
-            w="120px"
-            h="80px"
-            mr="8px"
-            overflow="hidden"
+    <Box p="0" width="100%" bg="linear-gradient(180deg, #151923, #111622)" minH="100vh" color="white" borderRight="1px solid #ffffff14">
+      <Flex alignItems="flex-start" flexDirection="column" p="16px 8px" gap="24px" h="100%">
+        {/* AI Button */}
+        <Flex w="100%" justifyContent="center">
+          <Button
+            color="white"
+            fontWeight="bold"
+            fontSize="16px"
+            h="48px"
+            w="48px"
+            borderRadius="12px"
+            mb="8px"
+            p="6px"
           >
-            <LogoComponent />
-          </Flex>
-          {/* <NextJsChakraLink
-            w="100px"
-            href={Routes.root}
-            cursor="pointer"
-            fontWeight="extrabold"
-          >
-            {brandName}
-          </NextJsChakraLink> */}
+            <Image src="/logo-icon.png" alt="Logo" width={36} height={36} />
+          </Button>
         </Flex>
 
-        <MenuItem
-          route={Routes.dashboard}
-          currentPage={currentPage}
-          onClick={onMenuItemClick}
-          loadingRoute={loadingRoute}
-        >
-          <TbUsers size="16px" /> &nbsp;<MenuLabel>Dashboard</MenuLabel>
-        </MenuItem>
+        {/* Navigation Items */}
+        <Flex flexDirection="column" gap="20px" w="100%" alignItems="center">
+          {/* Generator */}
+          <Flex flexDirection="column" alignItems="center" gap="4px" cursor="pointer" _hover={{ opacity: 0.8 }}>
+            <Flex
+              w="44px"
+              h="44px"
+              bg="transparent"
+              borderRadius="12px"
+              alignItems="center"
+              justifyContent="center"
+              border="1px solid #ffffff14"
+              onClick={() => router.push(Routes.articlegenerator)}
+            >
+              <RiEdit2Fill size="16px" color="#fbbf24" />
+            </Flex>
+            <Text color={textColor} fontSize="11px" fontWeight="500" textAlign="center" onClick={() => router.push(Routes.articlegenerator)}>
+              Generator
+            </Text>
+          </Flex>
 
-        <MenuItem
-          route={Routes.articlegenerator}
-          currentPage={currentPage}
-          onClick={onMenuItemClick}
-          loadingRoute={loadingRoute}
-        >
-          <TbChecklist size="16px" /> &nbsp;<MenuLabel>Article Generator</MenuLabel>
-        </MenuItem>
+          {/* Keywords */}
+          <Flex flexDirection="column" alignItems="center" gap="4px" cursor="pointer" _hover={{ opacity: 0.8 }}>
+           <Flex
+              w="44px"
+              h="44px"
+              bg="transparent"
+              border="1px solid #ffffff14"
+              borderRadius="12px"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <TbKey size="16px" color="#fbbf24" />
+            </Flex>
+            <Text color={textColor} fontSize="11px" fontWeight="500" textAlign="center">
+              Keywords
+            </Text>
+          </Flex>
 
-        <MenuItem
-          route={Routes.batch}
-          currentPage={currentPage}
-          onClick={onMenuItemClick}
-          loadingRoute={loadingRoute}
-        >
-          <TbChecklist size="16px" /> &nbsp;<MenuLabel>My Articles</MenuLabel>
-        </MenuItem>
+          {/* History */}
+          <Flex flexDirection="column" alignItems="center" gap="4px" cursor="pointer" _hover={{ opacity: 0.8 }}>
+            <Flex
+              w="44px"
+              h="44px"
+              bg="transparent"
+              border="1px solid #ffffff14"
+              borderRadius="12px"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <FaFolderOpen size="16px" color="#fbbf24" />
+            </Flex>
+            <Text color={textColor} fontSize="11px" fontWeight="500" textAlign="center">
+              History
+            </Text>
+          </Flex>
+        </Flex>
 
-        <MenuItem
-          route={Routes.account}
-          currentPage={currentPage}
-          onClick={onMenuItemClick}
-          loadingRoute={loadingRoute}
-        >
-          <TbUsers size="16px" /> &nbsp;<MenuLabel>Account</MenuLabel>
-        </MenuItem>
+        {/* Spacer */}
+        <Box flex="1" />
 
-        {/* <MenuItem
-          route={Routes.apiKeys}
-          currentPage={currentPage}
-          onClick={onMenuItemClick}
-          loadingRoute={loadingRoute}
-        >
-          <TbKey size="16px" /> &nbsp;<MenuLabel>Developer API</MenuLabel>
-        </MenuItem> */}
+        {/* Account Section - Bottom Aligned */}
+        <Flex flexDirection="column" gap="20px" w="100%" alignItems="center" mt="auto">
+          {/* Account */}
+          <Flex flexDirection="column" alignItems="center" gap="4px" cursor="pointer" _hover={{ opacity: 0.8 }} position="relative">
+            <Flex
+              w="44px"
+              h="44px"
+              bg="transparent"
+              border="1px solid #ffffff14"
+              borderRadius="50%"
+              alignItems="center"
+              justifyContent="center"
+              position="relative"
+            >
+              <TbUser size="16px" color="#60a5fa" />
+              <Badge
+                position="absolute"
+                top="90%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                bgGradient="linear(to-r, blue.500, purple.500)"
+                color="white"
+                fontSize="8px"
+                fontWeight="bold"
+                borderRadius="3px"
+                px="4px"
+                py="1px"
+              >
+                PRO
+              </Badge>
+            </Flex>
+            <Text color={textColor} fontSize="11px" fontWeight="500" textAlign="center">
+              Account
+            </Text>
+          </Flex>
 
-        <Text
-          fontSize="18px"
-          fontWeight="semibold"
-          letterSpacing="-0.45px"
-          color={sectionColor}
-          mt="16px"
-          mb="4px"
-          mx="8px"
-        >
-          Resources
+          {/* Upgrade */}
+          <Flex flexDirection="column" alignItems="center" gap="4px" cursor="pointer" _hover={{ opacity: 0.8 }}>
+            <Flex
+              w="44px"
+              h="44px"
+              bgGradient="linear(to-r, blue.500, purple.500)"
+              borderRadius="12px"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <TbRocket size="16px" color="white" />
+            </Flex>
+            <Text color={textColor} fontSize="11px" fontWeight="500" textAlign="center">
+              Upgrade
         </Text>
-        <MenuItem
-          route={`/pricing`}
-          currentPage={currentPage}
-          isExternal
-          onClick={onMenuItemClick}
-          loadingRoute={loadingRoute}
-        >
-          <TbStar size="16px" /> &nbsp;
-          <MenuLabel>Upgrade</MenuLabel>
-        </MenuItem>
-        <MenuItem
-          route={Routes.affiliates}
-          currentPage={currentPage}
-          isExternal
-          onClick={onMenuItemClick}
-          loadingRoute={loadingRoute}
-        >
-          <TbHeartHandshake size="16px" /> &nbsp;
-          <MenuLabel>Affiliate program</MenuLabel>
-        </MenuItem>
-        <MenuItem
-          route={cannyUrl}
-          currentPage={currentPage}
-          isExternal
-          onClick={onMenuItemClick}
-          loadingRoute={loadingRoute}
-        >
-          <TbBrandHipchat size="16px" /> &nbsp;
-          <MenuLabel>Feedback</MenuLabel>
-        </MenuItem>
-        {/* uncomment if you are using the Canny Changelog widget */}
-        {/* <MenuItem currentPage={currentPage} data-canny-changelog isExternal>
-          <TbSpeakerphone size="16px" /> &nbsp;
-          <MenuLabel>What&apos;s new</MenuLabel>
-        </MenuItem> */}
+          </Flex>
+        </Flex>
       </Flex>
     </Box>
   );

@@ -22,6 +22,9 @@ import {
 import { useSession } from "next-auth/react";
 import { TbMenu2 } from "react-icons/tb";
 import dynamic from "next/dynamic";
+import { useContext } from "react";
+import { PricingPopupContext } from "@/app/PricingPopupProvider";
+import PricingPopup from "@/components/PricingPopup/PricingPopup";
 
 // Dynamically import page components with loading states
 const DashboardComponent = dynamic(
@@ -67,7 +70,7 @@ export const WebAppPage = ({ currentPage }: WebAppPageProps) => {
   const isMobile = useMobile();
   const { data: session, status } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const { isOpen: isPricingPopupOpen, onOpen: onPricingPopupOpen, onClose: onPricingPopupClose } = useContext(PricingPopupContext);
   const buttonColor = useColorModeValue("blackAlpha.600", "whiteAlpha.600");
   const buttonColorScheme = useColorModeValue("blackAlpha", "whiteAlpha");
 
@@ -175,8 +178,10 @@ export const WebAppPage = ({ currentPage }: WebAppPageProps) => {
               </Center>
             )}  
           </Flex>
+          <PricingPopup isOpen={isPricingPopupOpen} onClose={onPricingPopupClose} />
         </>
       )}
+
     </Center>
   );
 };

@@ -24,12 +24,14 @@ body.chakra-ui-dark .godmod-progress {
 .ql-container.ql-snow {
     height: calc(100vh - 152px);
 }
-.chakra-input, .chakra-textarea {
+input, textarea {
     width: 100%;
-    padding: 12px;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 1rem;
+    background: #0e1322;
+    color: #eef2f7;
+    border: 1px solid #ffffff14;
+    border-radius: 12px;
+    padding: 10px 12px;
+    outline: none;
 }
 body.chakra-ui-light .chakra-input, 
 body.chakra-ui-light .chakra-textarea {
